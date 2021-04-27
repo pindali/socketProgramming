@@ -23,21 +23,20 @@ class gui:
         self.serverAddr = c
         self.mainWindow = tkinter.Tk()
         self.isItmyturn = False
+        self.myMoves = []
+        self.hisMoves = []
     def AbleBtn(self):
         self.isItmyturn = True
-        # for b in range(len(button)):
-        #         if b not in takenList:
-        #             button[b]['state'] = tkinter.NORMAL
         self.mainWindow.update()
-                    
+    def checkWin(self):
+        
     def resetBtn(self):
         for b in button:
             b['text'] = ""
     def DisableBtn(self,id):
         if self.isItmyturn == True and id not in takenList:
+            self.myMoves.append(id)
             print(self.isItmyturn)
-            # if id not in takenList and self.isItmyturn == True and id != "":
-            # if True:
             print("btn clicked "+str(id))
 
             self.isItmyturn = False
@@ -46,14 +45,9 @@ class gui:
             button[id]['text'] = "O"
             self.mainWindow.update()
             self.serverAddr.send(bytes(str(id),'utf-8'))
-            # for b in range(len(button)):
-            #         # if b not in takenList:
-            #         button[b]['state'] = tkinter.DISABLED
             self.mainWindow.update()
-                
             servVal = int(self.serverAddr.recv(1024).decode())
-            # if servVal not in takenList and servVal != "":
-            # if True:
+            self.hisMoves.append(servVal)
             takenList.append(servVal)
             button[servVal]['text'] = "X"
             self.mainWindow.update()
@@ -64,8 +58,8 @@ class gui:
         msgFrame.pack()
         gameFrame = tkinter.Frame(self.mainWindow)
         gameFrame.pack(side= "bottom")
-        reset = tkinter.Button(msgFrame,width = 10, command= self.resetBtn)
-        reset.pack()
+        # reset = tkinter.Button(msgFrame,width = 10, command= self.resetBtn)
+        # reset.pack()
         msg = tkinter.Message( msgFrame, text = "Welcome to the game") 
         msg.pack(side ="top",fill ="both",expand=True) 
         for i in range(9):
