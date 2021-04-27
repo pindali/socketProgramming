@@ -25,47 +25,40 @@ class gui:
         self.isItmyturn = False
     def AbleBtn(self):
         self.isItmyturn = True
-        # for b in range(len(button)):
-        #         if b not in takenList:
-        #             button[b]['state'] = tkinter.NORMAL
-        self.mainWindow.update()
+        for b in range(len(button)):
+                if b not in takenList:
+                    button[b]['state'] == tkinter.NORMAL
                     
-    def resetBtn(self):
-        for b in button:
-            b['text'] = ""
-    def DisableBtn(self,id):
-        if self.isItmyturn == True and id not in takenList:
-            print(self.isItmyturn)
-            # if id not in takenList and self.isItmyturn == True and id != "":
-            # if True:
-            print("btn clicked "+str(id))
 
-            self.isItmyturn = False
-            print(id)
-            takenList.append(id)
-            button[id]['text'] = "O"
-            self.mainWindow.update()
-            self.serverAddr.send(bytes(str(id),'utf-8'))
-            # for b in range(len(button)):
-            #         # if b not in takenList:
-            #         button[b]['state'] = tkinter.DISABLED
-            self.mainWindow.update()
-                
-            servVal = int(self.serverAddr.recv(1024).decode())
-            # if servVal not in takenList and servVal != "":
-            # if True:
-            takenList.append(servVal)
-            button[servVal]['text'] = "X"
-            self.mainWindow.update()
-            self.AbleBtn()
+    def DisableBtn(self,id):
+        print(self.isItmyturn)
+        # if id not in takenList and self.isItmyturn == True and id != "":
+        # if True:
+        print("btn clicked "+str(id))
+
+        self.isItmyturn = False
+        print(id)
+        takenList.append(id)
+        button[id]['text'] = "O"
+        self.mainWindow.update()
+        self.serverAddr.send(bytes(str(id),'utf-8'))
+        for b in range(len(button)):
+                if b not in takenList:
+                    button[b]['state'] == tkinter.DISABLED
+            
+        servVal = int(self.serverAddr.recv(1024).decode())
+        # if servVal not in takenList and servVal != "":
+        # if True:
+        takenList.append(servVal)
+        button[servVal]['text'] = "X"
+        self.AbleBtn()
     def main(self):
         self.mainWindow.title("TicTacToe")
         msgFrame = tkinter.Frame(self.mainWindow)
         msgFrame.pack()
         gameFrame = tkinter.Frame(self.mainWindow)
         gameFrame.pack(side= "bottom")
-        reset = tkinter.Button(msgFrame,width = 10, command= self.resetBtn)
-        reset.pack()
+
         msg = tkinter.Message( msgFrame, text = "Welcome to the game") 
         msg.pack(side ="top",fill ="both",expand=True) 
         for i in range(9):

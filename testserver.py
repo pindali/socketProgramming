@@ -24,50 +24,42 @@ class gui:
         self.mainWindow = tkinter.Tk()
 
     def AbleBtn(self):
-
-        # flag = True
         self.isItmyturn = True
-        # for b in range(len(button)):
-        #     if b not in takenList:
-        #         button[b]['state'] = "normal"
-        self.mainWindow.update()
+        for b in range(len(button)):
+            if b not in takenList:
+                button[b]['state'] == tkinter.NORMAL
+                
                 
     def clickBtn(self,id):
         self.clicked = True
         self.btnId = id
+    def DisableBtn(self,id):
+        print(self.isItmyturn)
+        print("btn clicked "+str(id))
+        # if id not in takenList and self.isItmyturn == True and id != "":
+        # if True:
+        self.isItmyturn = False
+        takenList.append(id)
+        print(id)
+        self.mainWindow.update()
+        self.clientAddr.send(bytes(str(id),'utf-8'))
+        button[id]['text'] = "X"
+        self.mainWindow.update()
+
+        print("wait for 10 sec")
+        for b in range(len(button)):
+            if b not in takenList:
+                button[b]['state'] == tkinter.DISABLED
+                
+        cliVal = int(self.clientAddr.recv(1024).decode())
+        # if cliVal not in takenList and cliVal != "":
+        # if True:
+        button[cliVal]['text'] = "O"
+        takenList.append(cliVal)
+        self.AbleBtn()
     def resetBtn(self):
         for b in button:
             b['text'] = ""
-    def DisableBtn(self,id):
-        # if flag:
-        if self.isItmyturn == True and id not in takenList:
-            # flag = False
-            self.isItmyturn = False
-            print(self.isItmyturn)
-            print("btn clicked "+str(id))
-            # if id not in takenList and self.isItmyturn == True and id != "":
-            # if True:
-            # self.isItmyturn = False
-            takenList.append(id)
-            print(id)
-            self.mainWindow.update()
-            self.clientAddr.send(bytes(str(id),'utf-8'))
-            button[id]['text'] = "X"
-            self.mainWindow.update()
-
-            print("wait for 10 sec")
-            # for b in range(len(button)):
-            #     # if b not in takenList:
-            #     button[b]['state'] = "disable"
-            self.mainWindow.update()
-            cliVal = int(self.clientAddr.recv(1024).decode())
-            # if cliVal not in takenList and cliVal != "":
-            # if True:
-            button[cliVal]['text'] = "O"
-            takenList.append(cliVal)
-            self.mainWindow.update()
-            self.AbleBtn()
-            
     def main(self):
         self.mainWindow.title("TicTacToe")
         msgFrame = tkinter.Frame(self.mainWindow)
@@ -77,11 +69,11 @@ class gui:
 
         msg = tkinter.Message( msgFrame, text = "Welcome to the game") 
         msg.pack(side ="top",fill ="both",expand=True) 
-        rest = tkinter.Button(msgFrame,width= 10,command= self.resetBtn)
-        rest.pack()
+        resetBtn = tkinter.Button(msgFrame,width =10,comman=self.resetGame)
         for i in range(9):
             button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg="#05f5e1"))
             button[i].grid(row=index[i+1][0],column=index[i+1][1])
+      
         self.mainWindow.mainloop()
 
 def main():
