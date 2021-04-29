@@ -22,7 +22,31 @@ class gui:
         self.clicked = False
         self.btnId = -1
         self.mainWindow = tkinter.Tk()
-    
+        # self.matirx = [[-1]*3]*3
+        self.matirx = [[-1]*3 for _ in range(3)]
+
+    def checkWin(self):
+        md = 0
+        od = 0
+        for i in range(3):
+            s1 = 0
+            s2 = 0
+            for j in range(3):
+                s1 = s1 + self.matirx[i][j]
+                s2 = s2 + self.matirx[j][i]
+                if i+j == 2:
+                    od = od + self.matirx[i][j]
+                if i == j :
+                    md = md + self.matirx[i][j]
+            if s1 == 3 or s2 == 3:
+                return "m"
+            if s1 == 6 or s2 ==6:
+                return "h"
+        if md == 6 or od == 6:
+            return "h"
+        if md == 3 or od ==3:
+            return "m"
+        return "no one won!! lol"
     def AbleBtn(self):
         self.isItmyturn = True
         self.mainWindow.update()
@@ -36,21 +60,28 @@ class gui:
     def DisableBtn(self,id):
         if self.isItmyturn == True and id not in takenList:
             self.isItmyturn = False
-            print(self.isItmyturn)
-            print("btn clicked "+str(id))
+            print(self.matirx)
+            # print(self.isItmyturn)
+            # print("btn clicked "+str(id))
             takenList.append(id)
-            print(id)
+            # print(id)
             self.mainWindow.update()
             self.clientAddr.send(bytes(str(id),'utf-8'))
             button[id]['text'] = "X"
             self.mainWindow.update()
-
-            print("wait for 10 sec")
+            self.matirx[index[id+1][0]-1][index[id+1][1]-1] = 1
+            print(self.checkWin())
+            
+            # print("wait for 10 sec")
             self.mainWindow.update()
             cliVal = int(self.clientAddr.recv(1024).decode())
             button[cliVal]['text'] = "O"
+
             takenList.append(cliVal)
             self.mainWindow.update()
+            self.matirx[index[cliVal+1][0]-1][index[cliVal+1][1]-1] = 2
+            print(self.checkWin())
+
             self.AbleBtn()
             
     def main(self):

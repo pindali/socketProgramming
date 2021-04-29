@@ -25,32 +25,60 @@ class gui:
         self.isItmyturn = False
         self.myMoves = []
         self.hisMoves = []
+        self.matirx = [[-1]*3 for _ in range(3)]
+        # self.matirx = [[-1,-1,-1],[-1,-1,-1],[-1,-1,-1]]
     def AbleBtn(self):
         self.isItmyturn = True
         self.mainWindow.update()
     def checkWin(self):
+        md = 0
+        od = 0
+        for i in range(3):
+            s1 = 0
+            s2 = 0
+            for j in range(3):
+                print(self.matirx)
+                s1 = s1 + self.matirx[i][j]
+                s2 = s2 + self.matirx[j][i]
+                if i+j == 2:
+                    od = od + self.matirx[i][j]
+                if i == j :
+                    md = md + self.matirx[i][j]
+            if s1 == 3 or s2 == 3:
+                return "m"
+            if s1 == 6 or s2 ==6:
+                return "h"
+        if md == 6 or od == 6:
+            return "h"
+        if md == 3 or od ==3:
+            return "m"
+        return "no one won !! lol"
         
     def resetBtn(self):
         for b in button:
             b['text'] = ""
     def DisableBtn(self,id):
         if self.isItmyturn == True and id not in takenList:
-            self.myMoves.append(id)
-            print(self.isItmyturn)
-            print("btn clicked "+str(id))
-
-            self.isItmyturn = False
             print(id)
+            print(self.matirx)
+            self.matirx[index[id+1][0]-1][index[id+1][1]-1] = 1
+            print(self.matirx)
+            print(self.checkWin())
+            self.isItmyturn = False
             takenList.append(id)
             button[id]['text'] = "O"
             self.mainWindow.update()
             self.serverAddr.send(bytes(str(id),'utf-8'))
             self.mainWindow.update()
+            print(self.checkWin())
             servVal = int(self.serverAddr.recv(1024).decode())
             self.hisMoves.append(servVal)
             takenList.append(servVal)
             button[servVal]['text'] = "X"
             self.mainWindow.update()
+            self.matirx[index[servVal+1][0]-1][index[servVal+1][1]-1] = 2
+            print(self.checkWin())
+            
             self.AbleBtn()
     def main(self):
         self.mainWindow.title("TicTacToe")
