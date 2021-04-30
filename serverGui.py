@@ -23,7 +23,7 @@ class gui:
         self.btnId = -1
         self.mainWindow = tkinter.Tk()
         # self.matirx = [[-1]*3]*3
-        self.matirx = [[-1]*3 for _ in range(3)]
+        self.matirx = [[0]*3 for _ in range(3)]
 
     def checkWin(self):
         md = 0
@@ -40,9 +40,9 @@ class gui:
                     md = md + self.matirx[i][j]
             if s1 == 3 or s2 == 3:
                 return "m"
-            if s1 == 6 or s2 ==6:
+            if s1 == 30 or s2 ==30:
                 return "h"
-        if md == 6 or od == 6:
+        if md == 30 or od == 30:
             return "h"
         if md == 3 or od ==3:
             return "m"
@@ -79,7 +79,7 @@ class gui:
 
             takenList.append(cliVal)
             self.mainWindow.update()
-            self.matirx[index[cliVal+1][0]-1][index[cliVal+1][1]-1] = 2
+            self.matirx[index[cliVal+1][0]-1][index[cliVal+1][1]-1] = 10
             print(self.checkWin())
 
             self.AbleBtn()
