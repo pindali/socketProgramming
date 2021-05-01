@@ -25,6 +25,10 @@ class gui:
         self.myMoves = []
         self.hisMoves = []
         self.button=[]
+        self.msgFrame = tkinter.Frame(self.mainWindow)
+        self.msgFrame.pack()
+        self.msg = tkinter.Message( self.msgFrame, text = "Welcome to the game") 
+        self.msg.pack(side ="top",fill ="both",expand=True)
         self.matirx = [[0]*3 for _ in range(3)]
         # self.matirx = [[-1,-1,-1],[-1,-1,-1],[-1,-1,-1]]
     def AbleBtn(self):
@@ -45,6 +49,7 @@ class gui:
                     md = md + self.matirx[i][j]
             if s1 == 3 or s2 == 3:
                 self.isItmyturn = True
+                self.msg['text'] = "You won the game!!"
                 for dd in range(9):
                     takenList.append(dd+1)
                 if s1 == 3:
@@ -58,6 +63,8 @@ class gui:
                         self.button[i+(3*k)]['bg']='green'
                 return "m"
             if s1 == 30 or s2 ==30:
+                self.msg['text'] = "You loss the game!!"
+
                 self.isItmyturn = True
 
                 for dd in range(9):
@@ -73,6 +80,8 @@ class gui:
                         self.button[i+(3*k)]['bg']='red'
                 return "h"
         if md == 30 or od == 30:
+            self.msg['text'] = "You loss the game!!"
+
             self.isItmyturn = True
 
             # for k in range(3):
@@ -88,6 +97,8 @@ class gui:
 
             return "h"
         if md == 3 or od ==3:
+            self.msg['text'] = "You won the game!!"
+
             self.isItmyturn = True
 
             for dd in range(9):
@@ -142,8 +153,7 @@ class gui:
         gameFrame.pack(side= "bottom")
         # reset = tkinter.Button(msgFrame,width = 10, command= self.resetBtn)
         # reset.pack()
-        msg = tkinter.Message( msgFrame, text = "Welcome to the game") 
-        msg.pack(side ="top",fill ="both",expand=True) 
+         
         for i in range(9):
             self.button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg="darkgray"))
             self.button[i].grid(row=index[i+1][0],column=index[i+1][1])
