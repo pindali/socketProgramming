@@ -1,6 +1,8 @@
 import tkinter
 import time
 import socket
+from tkinter import colorchooser
+
 
 index = {
     1:[1,1],
@@ -145,17 +147,24 @@ class gui:
                     pass
             
             self.AbleBtn()
+    def changeColor(self):
+        color_code = colorchooser.askcolor(title ="Choose color")
+        for btn in self.button:
+            btn['bg'] = color_code[1]
+        self.mainWindow.update()
+        
+
     def main(self):
         self.mainWindow.title("TicTacToe")
-        msgFrame = tkinter.Frame(self.mainWindow)
-        msgFrame.pack()
+        colorChangeBtn = tkinter.Button(self.msgFrame,text="colour",command=self.changeColor)
+        colorChangeBtn.pack()
         gameFrame = tkinter.Frame(self.mainWindow)
         gameFrame.pack(side= "bottom")
         # reset = tkinter.Button(msgFrame,width = 10, command= self.resetBtn)
         # reset.pack()
          
         for i in range(9):
-            self.button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg="darkgray"))
+            self.button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg="#ff770f"))
             self.button[i].grid(row=index[i+1][0],column=index[i+1][1])
         self.mainWindow.update()
         tmp  = int(cs.recv(1024).decode())
