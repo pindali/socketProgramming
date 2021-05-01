@@ -44,22 +44,34 @@ class gui:
                 if i == j :
                     md = md + self.matirx[i][j]
             if s1 == 3 or s2 == 3:
+                for dd in range(9):
+                    takenList.append(dd+1)
                 if s1 == 3:
                     for k in range(3):
-                        self.button[i+k]['bg'] = 'red'
+                        print(i*3,end=" ")
+                        print(k)
+                        self.button[(i*3)+k]['bg'] = 'red'
+                        
                 if s2 == 3:
                     for k in range(3):
                         self.button[i+(3*k)]['bg']='red'
                 return "m"
             if s1 == 30 or s2 ==30:
+                for dd in range(9):
+                    takenList.append(dd+1)
                 if s1 == 30:
                     for k in range(3):
-                        self.button[i+k]['bg'] = 'red'
+                        print(i*3,end=" ")
+                        print(k)
+                        self.button[(i*3)+k]['bg'] = 'green'
+                        
                 if s2 == 30:
                     for k in range(3):
-                        self.button[i+(3*k)]['bg']='red'
+                        self.button[i+(3*k)]['bg']='green'
                 return "h"
         if md == 30 or od == 30:
+            # for k in range(3):
+
             return "h"
         if md == 3 or od ==3:
             return "m"
@@ -79,10 +91,13 @@ class gui:
             takenList.append(id)
             self.button[id]['text'] = "O"
             self.mainWindow.update()
+            print(self.checkWin())
             self.serverAddr.send(bytes(str(id),'utf-8'))
             self.mainWindow.update()
             print(self.checkWin())
             servVal = int(self.serverAddr.recv(1024).decode())
+            print(self.checkWin())
+
             self.hisMoves.append(servVal)
             takenList.append(servVal)
             self.button[servVal]['text'] = "X"
