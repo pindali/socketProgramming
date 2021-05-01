@@ -24,6 +24,7 @@ class gui:
         self.serverAddr = c
         self.mainWindow = tkinter.Tk()
         self.isItmyturn = False
+        self.clr = '#ff770f'
         self.myMoves = []
         self.hisMoves = []
         self.button=[]
@@ -34,6 +35,7 @@ class gui:
         self.matirx = [[0]*3 for _ in range(3)]
         # self.matirx = [[-1,-1,-1],[-1,-1,-1],[-1,-1,-1]]
     def AbleBtn(self):
+        print(takenList)
         self.isItmyturn = True
         self.mainWindow.update()
     def checkWin(self):
@@ -114,10 +116,8 @@ class gui:
             return "m"
         return "no one won!! lol"
 
-    def resetBtn(self):
-        for b in self.button:
-            b['text'] = ""
     def DisableBtn(self,id):
+        
         if self.isItmyturn == True and id not in takenList:
             # print(id)
             # print(self.matirx)
@@ -149,22 +149,36 @@ class gui:
             self.AbleBtn()
     def changeColor(self):
         color_code = colorchooser.askcolor(title ="Choose color")
+        self.clr = color_code[1]
         for btn in self.button:
             btn['bg'] = color_code[1]
+        v = self.checkWin()
         self.mainWindow.update()
+    def reset(self):
+        # print(takenList)
+        self.isItmyturn = True
+        self.clicked = False
+        self.btnId = -1
+        self.matirx = [[0]*3 for _ in range(3)]
+        for btn in self.button:
+            btn['text'] = ""
+            btn['bg'] = self.clr
+        takenList.clear()
         
 
     def main(self):
         self.mainWindow.title("TicTacToe")
         colorChangeBtn = tkinter.Button(self.msgFrame,text="colour",command=self.changeColor)
         colorChangeBtn.pack()
+        # resetBtn = tkinter.Button(self.msgFrame,text="Reset",command=self.reset)
+        # resetBtn.pack()
         gameFrame = tkinter.Frame(self.mainWindow)
         gameFrame.pack(side= "bottom")
         # reset = tkinter.Button(msgFrame,width = 10, command= self.resetBtn)
         # reset.pack()
          
         for i in range(9):
-            self.button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg="#ff770f"))
+            self.button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg=self.clr))
             self.button[i].grid(row=index[i+1][0],column=index[i+1][1])
         self.mainWindow.update()
         tmp  = int(cs.recv(1024).decode())

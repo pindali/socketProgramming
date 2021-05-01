@@ -19,6 +19,7 @@ class gui:
         print("class object created")
         self.clientAddr = c
         self.isItmyturn = True
+        self.clr = "#05f5e1"
         self.clicked = False
         self.btnId = -1
         self.mainWindow = tkinter.Tk()
@@ -117,9 +118,7 @@ class gui:
     def clickBtn(self,id):
         self.clicked = True
         self.btnId = id
-    def resetBtn(self):
-        for b in self.button:
-            b['text'] = ""
+
     def DisableBtn(self,id):
         if self.isItmyturn == True and id not in takenList:
             self.isItmyturn = False
@@ -154,21 +153,34 @@ class gui:
             self.AbleBtn()
     def changeColor(self):
         color_code = colorchooser.askcolor(title ="Choose color")
+        self.clr = color_code[1]
         for btn in self.button:
             btn['bg'] = color_code[1]
+        v = self.checkWin()
         self.mainWindow.update()
         
-
+    def reset(self):
+        self.isItmyturn = True
+        self.clicked = False
+        self.btnId = -1
+        self.matirx = [[0]*3 for _ in range(3)]
+        for btn in self.button:
+            btn['text'] = ""
+            btn['bg'] = self.clr
+        takenList.clear()
+        
     def main(self):
         self.mainWindow.title("TicTacToe")
         colorChangeBtn = tkinter.Button(self.msgFrame,text="colour",command=self.changeColor)
         colorChangeBtn.pack()
+        # resetBtn = tkinter.Button(self.msgFrame,text="Reset",command=self.reset)
+        # resetBtn.pack()
         gameFrame = tkinter.Frame(self.mainWindow)
         gameFrame.pack(side= "bottom")
         # rest = tkinter.Button(msgFrame,width= 10,command= self.resetBtn)
         # rest.pack()
         for i in range(9):
-            self.button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg="#05f5e1"))
+            self.button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg=self.clr))
             self.button[i].grid(row=index[i+1][0],column=index[i+1][1])
         self.mainWindow.update()
         self.mainWindow.mainloop()
