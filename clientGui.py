@@ -44,36 +44,60 @@ class gui:
                 if i == j :
                     md = md + self.matirx[i][j]
             if s1 == 3 or s2 == 3:
+                self.isItmyturn = True
                 for dd in range(9):
                     takenList.append(dd+1)
                 if s1 == 3:
                     for k in range(3):
                         print(i*3,end=" ")
                         print(k)
-                        self.button[(i*3)+k]['bg'] = 'red'
+                        self.button[(i*3)+k]['bg'] = 'green'
                         
                 if s2 == 3:
                     for k in range(3):
-                        self.button[i+(3*k)]['bg']='red'
+                        self.button[i+(3*k)]['bg']='green'
                 return "m"
             if s1 == 30 or s2 ==30:
+                self.isItmyturn = True
+
                 for dd in range(9):
                     takenList.append(dd+1)
                 if s1 == 30:
                     for k in range(3):
                         print(i*3,end=" ")
                         print(k)
-                        self.button[(i*3)+k]['bg'] = 'green'
+                        self.button[(i*3)+k]['bg'] = 'red'
                         
                 if s2 == 30:
                     for k in range(3):
-                        self.button[i+(3*k)]['bg']='green'
+                        self.button[i+(3*k)]['bg']='red'
                 return "h"
         if md == 30 or od == 30:
+            self.isItmyturn = True
+
             # for k in range(3):
+            for dd in range(9):
+                    takenList.append(dd+1)
+            if md == 30:
+                for dd in range(3):
+                    for dd in range(3):
+                        self.button[dd*4]['bg'] = 'red'
+            if od == 30:
+                for dd in range(3):
+                    self.button[(dd+1)*2]['bg'] = 'red'
 
             return "h"
         if md == 3 or od ==3:
+            self.isItmyturn = True
+
+            for dd in range(9):
+                    takenList.append(dd+1)
+            if md == 3:
+                for dd in range(3):
+                   self.button[dd*4]['bg'] = 'green'
+            if od == 3:
+                for dd in range(3):
+                    self.button[(dd+1)*2]['bg'] = 'green'
             return "m"
         return "no one won!! lol"
 
@@ -94,16 +118,20 @@ class gui:
             print(self.checkWin())
             self.serverAddr.send(bytes(str(id),'utf-8'))
             self.mainWindow.update()
-            print(self.checkWin())
-            servVal = int(self.serverAddr.recv(1024).decode())
-            print(self.checkWin())
+            res = (self.checkWin())
+            if res == "no one won!! lol":
+                try:
+                    servVal = int(self.serverAddr.recv(1024).decode())
+                    print(self.checkWin())
 
-            self.hisMoves.append(servVal)
-            takenList.append(servVal)
-            self.button[servVal]['text'] = "X"
-            self.mainWindow.update()
-            self.matirx[index[servVal+1][0]-1][index[servVal+1][1]-1] = 10
-            print(self.checkWin())
+                    self.hisMoves.append(servVal)
+                    takenList.append(servVal)
+                    self.button[servVal]['text'] = "X"
+                    self.mainWindow.update()
+                    self.matirx[index[servVal+1][0]-1][index[servVal+1][1]-1] = 10
+                    print(self.checkWin())
+                except:
+                    pass
             
             self.AbleBtn()
     def main(self):

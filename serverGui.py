@@ -12,7 +12,6 @@ index = {
     8:[3,2],
     9:[3,3]
 }
-button=[]
 takenList =[]
 class gui:
     def __init__(self,c):
@@ -22,6 +21,8 @@ class gui:
         self.clicked = False
         self.btnId = -1
         self.mainWindow = tkinter.Tk()
+        self.button=[]
+
         # self.matirx = [[-1]*3]*3
         self.matirx = [[0]*3 for _ in range(3)]
 
@@ -39,14 +40,64 @@ class gui:
                 if i == j :
                     md = md + self.matirx[i][j]
             if s1 == 3 or s2 == 3:
+                self.isItmyturn = True
+
+                for dd in range(9):
+                    takenList.append(dd+1)
+                if s1 == 3:
+                    for k in range(3):
+                        print(i*3,end=" ")
+                        print(k)
+                        self.button[(i*3)+k]['bg'] = 'green'
+                        
+                if s2 == 3:
+                    for k in range(3):
+                        self.button[i+(3*k)]['bg']='green'
                 return "m"
             if s1 == 30 or s2 ==30:
+                self.isItmyturn = True
+
+                for dd in range(9):
+                    takenList.append(dd+1)
+                if s1 == 30:
+                    for k in range(3):
+                        print(i*3,end=" ")
+                        print(k)
+                        self.button[(i*3)+k]['bg'] = 'red'
+                        
+                if s2 == 30:
+                    for k in range(3):
+                        self.button[i+(3*k)]['bg']='red'
                 return "h"
         if md == 30 or od == 30:
+            self.isItmyturn = True
+
+            # for k in range(3):
+            for dd in range(9):
+                    takenList.append(dd+1)
+            if md == 30:
+                for dd in range(3):
+                    for dd in range(3):
+                        self.button[dd*4]['bg'] = 'red'
+            if od == 30:
+                for dd in range(3):
+                    self.button[(dd+1)*2]['bg'] = 'red'
+
             return "h"
         if md == 3 or od ==3:
+            self.isItmyturn = True
+
+            for dd in range(9):
+                    takenList.append(dd+1)
+            if md == 3:
+                for dd in range(3):
+                   self.button[dd*4]['bg'] = 'green'
+            if od == 3:
+                for dd in range(3):
+                    self.button[(dd+1)*2]['bg'] = 'green'
             return "m"
         return "no one won!! lol"
+
     def AbleBtn(self):
         self.isItmyturn = True
         self.mainWindow.update()
@@ -55,32 +106,38 @@ class gui:
         self.clicked = True
         self.btnId = id
     def resetBtn(self):
-        for b in button:
+        for b in self.button:
             b['text'] = ""
     def DisableBtn(self,id):
         if self.isItmyturn == True and id not in takenList:
             self.isItmyturn = False
             print(self.matirx)
+            # print(self.checkWin())
             # print(self.isItmyturn)
             # print("btn clicked "+str(id))
             takenList.append(id)
             # print(id)
+            print(self.checkWin())
+
             self.mainWindow.update()
             self.clientAddr.send(bytes(str(id),'utf-8'))
-            button[id]['text'] = "X"
+            self.button[id]['text'] = "X"
             self.mainWindow.update()
             self.matirx[index[id+1][0]-1][index[id+1][1]-1] = 1
-            print(self.checkWin())
+            res = (self.checkWin())
             
             # print("wait for 10 sec")
             self.mainWindow.update()
-            cliVal = int(self.clientAddr.recv(1024).decode())
-            button[cliVal]['text'] = "O"
-
-            takenList.append(cliVal)
-            self.mainWindow.update()
-            self.matirx[index[cliVal+1][0]-1][index[cliVal+1][1]-1] = 10
-            print(self.checkWin())
+            if res == "no one won!! lol":
+                try:
+                    cliVal = int(self.clientAddr.recv(1024).decode())
+                    self.button[cliVal]['text'] = "O"
+                    takenList.append(cliVal)
+                    self.mainWindow.update()
+                    self.matirx[index[cliVal+1][0]-1][index[cliVal+1][1]-1] = 10
+                    print(self.checkWin())
+                except:
+                    pass
 
             self.AbleBtn()
             
@@ -96,8 +153,8 @@ class gui:
         # rest = tkinter.Button(msgFrame,width= 10,command= self.resetBtn)
         # rest.pack()
         for i in range(9):
-            button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg="#05f5e1"))
-            button[i].grid(row=index[i+1][0],column=index[i+1][1])
+            self.button.append(tkinter.Button(gameFrame,width=25,height=10,command= lambda id= i:self.DisableBtn(id),bg="#05f5e1"))
+            self.button[i].grid(row=index[i+1][0],column=index[i+1][1])
         self.mainWindow.mainloop()
 
 def main():
